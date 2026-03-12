@@ -9,6 +9,8 @@ use App\Models\Learning;
 use App\Models\MemberRegistration;
 use App\Models\Organization;
 use App\Models\Social;
+use App\Models\Ticket;
+use App\Models\Union;
 use App\Models\User;
 use App\Models\Vote;
 use Illuminate\Http\Request;
@@ -25,6 +27,7 @@ class DashboardController extends Controller
         $totalOrganizations = Organization::count();
         $totalSocials = Social::count();
         $totalVotes = Vote::count();
+        $totalTickets = Ticket::count();
         $recentMembers = MemberRegistration::latest()->limit(5)->get();
 
         return view('pages.dashboard', compact(
@@ -36,6 +39,7 @@ class DashboardController extends Controller
             'totalOrganizations',
             'totalSocials',
             'totalVotes',
+            'totalTickets',
             'recentMembers'
         ));
     }

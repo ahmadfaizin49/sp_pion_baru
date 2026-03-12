@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Validator;
 
 
 class AuthController extends Controller
@@ -136,7 +137,7 @@ class AuthController extends Controller
     {
         $user = $request->user();
 
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'name'        => 'sometimes|string|max:255',
             'email'       => 'sometimes|nullable|email|unique:users,email,' . $user->id,
             'department'  => 'sometimes|nullable|string|max:255',
@@ -147,8 +148,19 @@ class AuthController extends Controller
             'gender'      => 'sometimes|nullable|in:male,female',
             'religion'    => 'sometimes|nullable|string|max:100',
             'education'   => 'sometimes|nullable|string|max:100',
-            'image_path'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:2048',
+            'image_path'  => 'sometimes|nullable|image|mimes:jpg,jpeg,png|max:5120',
+        ], [
+            'image_path.max'   => 'Ukuran foto maksimal adalah 5MB.',
+            'image_path.image' => 'File yang diunggah harus berupa gambar.',
+            'image_path.mimes' => 'Format foto yang didukung hanya JPG, JPEG, dan PNG.',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
 
         $data = $request->only([
             'name',

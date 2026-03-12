@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class TicketController extends Controller
 {
@@ -129,12 +130,23 @@ class TicketController extends Controller
     // 3️⃣ Submit tiket baru
     public function store(Request $request)
     {
-        $request->validate([
+        $validator = Validator::make($request->all(), [
             'type' => 'required|in:report,question,suggestion',
             'title' => 'nullable|string|max:255',
             'description' => 'required|string',
-            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:2048', // max 2MB
+            'attachment' => 'nullable|file|mimes:jpg,jpeg,png,pdf|max:5120',
+        ], [
+            'attachment.max'   => 'Ukuran lampiran maksimal adalah 5MB.',
+            'attachment.mimes' => 'Format lampiran yang didukung hanya JPG, JPEG, PNG, dan PDF.',
+            'attachment.file'  => 'Lampiran yang diunggah harus berupa file yang valid.',
         ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'status'  => false,
+                'message' => $validator->errors()->first()
+            ], 422);
+        }
 
         $user = Auth::user();
 

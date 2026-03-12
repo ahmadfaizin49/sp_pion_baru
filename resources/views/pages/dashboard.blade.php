@@ -21,7 +21,7 @@
             <!-- Start Baris 1 -->
 
             {{-- Card 1 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
@@ -37,7 +37,7 @@
             </div>
 
             {{-- Card 2 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
@@ -53,7 +53,7 @@
             </div>
 
             {{-- Card 3 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
                     <div class="bg-primary b-r-4 card-body">
                         <div class="media static-top-widget">
@@ -68,10 +68,14 @@
                 </div>
             </div>
 
+            <!-- End Baris 1 -->
+
+            <!-- Start Baris 2 -->
+
             {{-- Card 4 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-primary b-r-4 card-body">
+                    <div class="bg-secondary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="layers"></i></div>
                             <div class="media-body">
@@ -84,14 +88,10 @@
                 </div>
             </div>
 
-            <!-- End Baris 1 -->
-
-            <!-- Start Baris 2 -->
-
-            {{-- Card 1 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            {{-- Card 5 --}}
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-info b-r-4 card-body">
+                    <div class="bg-secondary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="dollar-sign"></i></div>
                             <div class="media-body">
@@ -104,10 +104,10 @@
                 </div>
             </div>
 
-            {{-- Card 2 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            {{-- Card 6 --}}
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-info b-r-4 card-body">
+                    <div class="bg-secondary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="globe"></i></div>
                             <div class="media-body">
@@ -120,10 +120,14 @@
                 </div>
             </div>
 
-            {{-- Card 3 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            <!-- End Baris 2 -->
+
+            <!-- Start Baris 3 -->
+
+            {{-- Card 7 --}}
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-info b-r-4 card-body">
+                    <div class="bg-warning b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="share-2"></i></div>
                             <div class="media-body">
@@ -136,10 +140,10 @@
                 </div>
             </div>
 
-            {{-- Card 4 --}}
-            <div class="col-sm-6 col-xl-3 col-lg-6">
+            {{-- Card 8 --}}
+            <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-info b-r-4 card-body">
+                    <div class="bg-warning b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="check-square"></i></div>
                             <div class="media-body">
@@ -152,7 +156,23 @@
                 </div>
             </div>
 
-            <!-- End Baris 2 -->
+            {{-- Card 9 --}}
+            <div class="col-sm-6 col-xl-4 col-lg-6">
+                <div class="card o-hidden border-0">
+                    <div class="bg-warning b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"><i data-feather="headphones"></i></div>
+                            <div class="media-body">
+                                <span class="m-0">Pengaduan</span>
+                                <h4 class="mb-0 counter">{{ $totalTickets }}</h4>
+                                <i class="icon-bg" data-feather="headphones"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End Baris 3 -->
 
 
             {{-- Table --}}
