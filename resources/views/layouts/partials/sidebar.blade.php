@@ -1,12 +1,19 @@
 <header class="main-nav">
     <div class="sidebar-user text-center">
-        <a class="setting-primary" href="javascript:void(0)"><i data-feather="settings"></i></a>
-        <img class="img-90 rounded-circle" src="{{ asset('assets/images/dashboard/1.png') }}" alt="User Image" />
+        <a class="setting-primary" href="{{ route('settings.edit') }}"><i data-feather="settings"></i></a>
+        @if (Auth::user()->image_path)
+            <img class="img-90 rounded-circle" src="{{ asset('storage/' . Auth::user()->image_path) }}" alt="User Image"
+                style="object-fit: cover; height: 90px; width: 90px;" />
+        @else
+            <img class="img-90 rounded-circle" src="{{ asset('assets/images/dashboard/1.png') }}" alt="Default Image" />
+        @endif
+
         <div class="badge-bottom">
             <span class="badge badge-primary">{{ strtoupper(Auth::user()->role) }}</span>
         </div>
-        <a href="{{ url('user-profile') }}">
-            <h6 class="mt-3 f-14 f-w-600">{{ Auth::user()->name }}</h6>
+
+        <a href="{{ route('profile.index') }}">
+            <h6 class="mt-2 f-14 f-w-700">{{ Auth::user()->name }}</h6>
         </a>
     </div>
 
@@ -142,6 +149,16 @@
                         <ul class="nav-submenu menu-content" style="display: {{ prefixBlock('members') }};">
                             <li><a href="{{ route('members.index') }}"
                                     class="{{ routeActive('members.index') }}">Data Member</a></li>
+                        </ul>
+                    </li>
+
+                    <li class="dropdown">
+                        <a class="nav-link menu-title {{ prefixActive('devices') }}" href="javascript:void(0)">
+                            <i data-feather="smartphone"></i><span>Perangkat</span>
+                        </a>
+                        <ul class="nav-submenu menu-content" style="display: {{ prefixBlock('devices') }};">
+                            <li><a href="{{ route('devices.index') }}"
+                                    class="{{ routeActive('devices.index') }}">Data Perangkat</a></li>
                         </ul>
                     </li>
 

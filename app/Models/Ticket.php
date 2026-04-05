@@ -17,9 +17,12 @@ class Ticket extends Model
         'description',
         'attachment',
         'status',
+        'is_read',
     ];
 
     protected $casts = [
+        'user_id' => 'integer',
+        'is_read' => 'boolean',
         'responded_at' => 'datetime',
     ];
 

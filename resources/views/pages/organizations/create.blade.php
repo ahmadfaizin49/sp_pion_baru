@@ -5,6 +5,7 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 @endpush
 
 @section('content')
@@ -32,7 +33,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -41,7 +42,7 @@
 
                         {{-- Alert Error --}}
                         @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-danger alert-dismissible fade show" role="alert">
                                 <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -50,7 +51,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
                             </div>
-                        @endif
+@endif
 
 
                         {{-- Form untuk create learning --}}
@@ -59,56 +60,35 @@
                             @csrf
 
                             <!-- Input Title -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Judul</label>
-                                        <input class="form-control" type="text" name="title"
-                                            value="{{ old('title') }}" required />
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Judul</label>
+                                <input class="form-control" type="text" name="title"
+                                    value="{{ old('title') }}" required />
                             </div>
 
                             <!-- Input Description -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Deskripsi</label>
-                                        <textarea class="form-control" name="description" rows="3">{{ old('description') }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Deskripsi</label>
+                                <textarea class="form-control" name="description" rows="3">{{ old('description') }}</textarea>
                             </div>
 
                             <!-- Choose Image -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Pilih Foto</label>
-                                        <input class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png">
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Pilih Foto</label>
+                                <input class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png">
                             </div>
 
                             <!-- Choose File -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Pilih File</label>
-                                        <input class="form-control" type="file" name="file" accept=".pdf,.doc,.docx"
-                                            required>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Pilih File</label>
+                                <input class="form-control" type="file" name="file" accept=".pdf,.doc,.docx">
                             </div>
 
                             <!-- Button Submit -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="text-end">
-                                        <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-save me-1"></i> Submit
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="text-end">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-save me-1"></i> Submit
+                                </button>
                             </div>
                         </form>
                         {{-- End Form --}}

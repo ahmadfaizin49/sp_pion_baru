@@ -3,9 +3,307 @@
 ================================ */
 
 .dt-col-no {
-    width: 32px;
-    min-width: 32px;
-    max-width: 32px;
+    width: 24px;
+    min-width: 24px;
+    max-width: 24px;
     text-align: center;
     white-space: nowrap;
+}
+
+/* ===============================
+   GLOBAL BUTTON INTERACTION
+================================ */
+.btn {
+    transition: all 0.3s ease !important;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.05);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+    transform: translateY(0);
+}
+
+/* ===============================
+   CUSTOM SOFT UI BADGES
+================================ */
+.badge-male {
+    background-color: #e7f1ff !important;
+    color: #0052cc !important;
+    border: 1px solid #cfe2ff;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-female {
+    background-color: #fff0f3 !important;
+    color: #af003d !important;
+    border: 1px solid #f8d7da;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-pending {
+    background-color: #fff8e1 !important;
+    color: #b05b00 !important;
+    border: 1px solid #ffe082;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-approved {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    border: 1px solid #c8e6c9;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-done {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    border: 1px solid #c8e6c9;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-rejected {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    border: 1px solid #ffcdd2;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-responded {
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+    border: 1px solid #bbdefb;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-processed {
+    background-color: #e0f7fa !important;
+    color: #00838f !important;
+    border: 1px solid #b2ebf2;
+    border-radius: 4px;
+    font-weight: 600;
+}
+
+.badge-report {
+    background-color: #ffebee !important;
+    color: #ff5252 !important;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-suggestion {
+    background-color: #e8f5e9 !important;
+    color: #4caf50 !important;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.badge-question {
+    background-color: #e3f2fd !important;
+    color: #448aff !important;
+    border-radius: 4px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+/* ===============================
+   CUSTOM SOFT UI ALERTS
+================================ */
+.alert-soft-success {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+    border: 1px solid #c8e6c9 !important;
+    border-radius: 8px;
+}
+
+.alert-soft-danger {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+    border: 1px solid #ffcdd2 !important;
+    border-radius: 8px;
+}
+
+.alert-soft-success .btn-close,
+.alert-soft-danger .btn-close {
+    filter: grayscale(1) invert(1) brightness(0.5);
+    opacity: 0.8;
+}
+
+/* ===============================
+   PREMIUM BUTTONS
+================================ */
+.btn-premium {
+    border: 1px solid #212529;
+    border-radius: 4px;
+    padding: 4px 10px;
+    font-size: 11px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    color: #212529 !important;
+    display: inline-block;
+    text-decoration: none;
+}
+
+.btn-premium:focus,
+.btn-premium:active {
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.btn-premium-lg {
+    padding: 10px 18px !important;
+    font-size: 14px !important;
+    font-weight: 600 !important;
+    border-radius: 4px !important;
+}
+
+.btn-login {
+    padding: 8px 16px !important;
+    font-size: 14px !important;
+    font-weight: 700 !important;
+    border-radius: 4px !important;
+    margin-top: 10px !important;
+}
+
+.btn-premium:disabled,
+.btn-premium.disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+    box-shadow: none;
+    pointer-events: none;
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    filter: brightness(1.1);
+    color: #212529 !important;
+}
+
+.btn-premium-white,
+.btn-premium-white:hover {
+    color: #ffffff !important;
+}
+
+.btn-premium-primary {
+    background: linear-gradient(135deg, #AA2224 0%, #d32f2f 100%);
+}
+
+.btn-premium-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.btn-premium-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #f8606d 100%);
+}
+
+.btn-premium-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+}
+
+/* ===============================
+   PREMIUM BACKGROUND GRADIENTS
+================================ */
+.bg-premium-primary {
+    background: linear-gradient(135deg, #AA2224 0%, #d32f2f 100%) !important;
+    color: #ffffff !important;
+}
+
+.bg-premium-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%) !important;
+    color: #ffffff !important;
+}
+
+.bg-premium-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #f8606d 100%) !important;
+    color: #ffffff !important;
+}
+
+.bg-premium-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%) !important;
+    color: #ffffff !important;
+}
+
+.bg-premium-info {
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%) !important;
+    color: #ffffff !important;
+}
+
+.btn-premium-info {
+    background: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+}
+
+.btn-premium-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+/* ===============================
+   LOADING OVERLAY & SPINNER
+================================ */
+#loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    transition: all 0.3s ease;
+}
+
+.loading-content {
+    text-align: center;
+    background: white;
+    padding: 40px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 90%;
+}
+
+.pion-loader-spinner {
+    width: 60px;
+    height: 60px;
+    border: 5px solid rgba(170, 34, 36, 0.1);
+    border-left-color: #AA2224;
+    border-radius: 50%;
+    animation: spinnerPremiumRotate 1s linear infinite;
+    margin: 0 auto 20px;
+}
+
+@keyframes spinnerPremiumRotate {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    color: #212529;
+    font-weight: 700;
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.loading-subtext {
+    color: #6c757d;
+    font-size: 0.9rem;
+    line-height: 1.5;
 }

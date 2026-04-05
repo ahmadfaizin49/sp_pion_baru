@@ -11,4 +11,10 @@ class VoteResult extends Model
         'vote_option_id',
         'user_id',
     ];
+
+    protected $casts = [
+        'vote_id' => 'integer',
+        'vote_option_id' => 'integer',
+        'user_id' => 'integer',
+    ];
 }

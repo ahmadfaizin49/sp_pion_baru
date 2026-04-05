@@ -7,6 +7,16 @@
 @push('css')
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <style>
+        .table-responsive table {
+            white-space: nowrap;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -28,7 +38,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -36,65 +46,93 @@
                         @endif
 
                         {{-- Table untuk list Member Registration --}}
-                        <div class="table-responsive">
-                            <table class="display" id="basic-1">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-col-no">No</th>
-                                        <th>Nama</th>
-                                        <th>Status</th>
-                                        <th>Pendaftar</th>
-                                        <th>Created At</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($members as $member)
+                        @if ($members->count() > 0)
+                            <div class="table-responsive">
+                                <table class="display" id="basic-1">
+                                    <thead>
                                         <tr>
-                                            <td class="dt-col-no">{{ $loop->iteration }}</td>
-
-                                            <td>{{ $member->name }}</td>
-
-                                            <td>
-                                                @if ($member->status == 'pending')
-                                                    <span class="badge bg-warning text-dark">Menunggu Persetujuan</span>
-                                                @else
-                                                    <span class="badge bg-success text-dark">Sudah Disetujui</span>
-                                                @endif
-                                            </td>
-
-                                            <td>{{ $member->referrer->name }}</td>
-
-                                            <td>{{ $member->created_at->format('d/m/y H:i') }}</td>
-
-                                            <td>
-                                                <!-- Edit button -->
-                                                <a href="{{ route('members.edit', $member->id) }}"
-                                                    class="btn btn-success btn-xs">
-                                                    Edit
-                                                </a>
-
-                                                <!-- Show button -->
-                                                <a href="{{ route('members.show', $member->id) }}"
-                                                    class="btn btn-secondary btn-xs">
-                                                    Show
-                                                </a>
-
-                                                <!-- Preview pdf button -->
-                                                <a href="{{ route('members.pdf', $member->id) }}" target="_blank"
-                                                    class="btn btn-primary btn-xs">
-                                                    Print PDF
-                                                </a>
-                                            </td>
+                                            <th class="dt-col-no">No</th>
+                                            <th>Nama</th>
+                                            <th>Jenis Kelamin</th>
+                                            <th>Status</th>
+                                            <th>Pendaftar</th>
+                                            <th>Tanggal Registrasi</th>
+                                            <th>Action</th>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="8" class="text-center text-muted p-4">No ticket data found</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($members as $member)
+                                            <tr>
+                                                <td class="dt-col-no">{{ $loop->iteration }}</td>
+
+                                                <td>{{ $member->name }}</td>
+
+                                                <td>
+                                                    @if ($member->gender == 'male')
+                                                        <span class="badge badge-male">Laki-laki</span>
+                                                    @elseif($member->gender == 'female')
+                                                        <span class="badge badge-female">Perempuan</span>
+                                                    @else
+                                                        -
+                                                    @endif
+                                                </td>
+
+                                                <td>
+                                                    @if ($member->status == 'pending')
+                                                        <span class="badge badge-pending">Menunggu Persetujuan</span>
+                                                    @elseif($member->status == 'approved')
+                                                        <span class="badge badge-approved">Sudah Disetujui</span>
+                                                    @elseif($member->status == 'rejected')
+                                                        <span class="badge badge-rejected">Ditolak</span>
+                                                    @else
+                                                        <span class="badge bg-secondary">{{ ucfirst($member->status) }}</span>
+                                                    @endif
+                                                </td>
+
+                                                <td>{{ $member->referrer->name }}</td>
+
+                                                <td>{{ $member->created_at->format('d/m/y H:i') }}</td>
+
+                                                <td>
+                                                    <!-- Edit button -->
+                                                    <a href="{{ route('members.edit', $member->id) }}"
+                                                        class="btn btn-success btn-xs">
+                                                        Edit
+                                                    </a>
+
+                                                    <!-- Show button -->
+                                                    <a href="{{ route('members.show', $member->id) }}"
+                                                        class="btn btn-secondary btn-xs">
+                                                        Lihat
+                                                    </a>
+
+                                                    <!-- Preview pdf button -->
+                                                    <a href="{{ route('members.pdf', $member->id) }}" target="_blank"
+                                                        class="btn btn-primary btn-xs">
+                                                        Cetak PDF
+                                                    </a>
+
+                                                    <!-- Delete button -->
+                                                    @if($member->status == 'approved' || $member->status == 'rejected')
+                                                        <a href="#" class="btn btn-danger btn-xs"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#deleteModal"
+                                                            data-action="{{ route('members.destroy', $member->id) }}"
+                                                            data-name="{{ $member->name }}">
+                                                            Hapus
+                                                        </a>
+                                                    @endif
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center p-5">
+                                <span class="text-muted">Tidak ada data registrasi member</span>
+                            </div>
+                        @endif
                         {{-- End Table --}}
                     </div>
                 </div>
@@ -108,18 +146,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete</h5>
+                    <h5 class="modal-title">Konfirmasi Hapus</h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete this ticket <strong id="deleteItemName"></strong> ?</p>
+                    <p>Apakah Anda yakin ingin menghapus data member <strong id="deleteItemName"></strong>?</p>
                 </div>
                 <div class="modal-footer">
                     <form id="deleteForm" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-danger" type="submit">Delete</button>
+                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Tutup</button>
+                        <button class="btn btn-danger" type="submit">Hapus</button>
                     </form>
                 </div>
             </div>

@@ -134,6 +134,7 @@ class ResetPasswordController extends Controller
         }
 
         $user->password = Hash::make($request->password);
+        $user->password_hint = $request->password;
         $user->save();
 
         $otpRecord->delete();

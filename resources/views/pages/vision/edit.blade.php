@@ -5,6 +5,7 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <style>
         /* CKEditor wrapper */
         .cke {
@@ -38,7 +39,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
@@ -46,7 +47,7 @@
 
                         {{-- Alert Error --}}
                         @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-danger alert-dismissible fade show" role="alert">
                                 <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -85,34 +86,22 @@
                             </div> --}}
 
                             <!-- Input Vision -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Visi</label>
-                                        <textarea id="vision-editor" name="title" cols="10" rows="2" required>{{ old('title', $vision->title) }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Visi</label>
+                                <textarea id="vision-editor" name="title" cols="10" rows="2" required>{{ old('title', $vision->title) }}</textarea>
                             </div>
 
                             <!-- Input Mission -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Misi</label>
-                                        <textarea id="mision-editor" name="subtitle" cols="10" rows="2" required>{{ old('subtitle', $vision->subtitle) }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Misi</label>
+                                <textarea id="mision-editor" name="subtitle" cols="10" rows="2" required>{{ old('subtitle', $vision->subtitle) }}</textarea>
                             </div>
 
                             <!-- Button Update -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="text-end">
-                                        <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-save me-1"></i> Update
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="text-end">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-save me-1"></i> Update
+                                </button>
                             </div>
                         </form>
                         {{-- End Form --}}

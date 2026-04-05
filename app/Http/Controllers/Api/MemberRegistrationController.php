@@ -25,7 +25,8 @@ class MemberRegistrationController extends Controller
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                    ->orWhere('nik', 'like', "%{$search}%");
+                    ->orWhere('nik_ktp', 'like', "%{$search}%")
+                    ->orWhere('nik_karyawan', 'like', "%{$search}%");
             });
         }
 
@@ -36,9 +37,10 @@ class MemberRegistrationController extends Controller
         $data = $registrations->map(function ($reg) {
             return [
                 'id'     => $reg->id,
-                'name'   => $reg->name,
-                'nik'    => $reg->nik,
-                'status' => $reg->status,
+                'name'         => $reg->name,
+                'nik_ktp'      => $reg->nik_ktp,
+                'nik_karyawan' => $reg->nik_karyawan,
+                'status'       => $reg->status,
                 'created_at' => $reg->created_at,
             ];
         });
@@ -73,8 +75,10 @@ class MemberRegistrationController extends Controller
      */
     public function store(Request $request)
     {
-        $nikExist = User::where('nik', $request->nik)->exists()
-            || MemberRegistration::where('nik', $request->nik)->exists();
+        $nikExist = User::where('nik_ktp', $request->nik_ktp)->exists()
+            || User::where('nik_karyawan', $request->nik_karyawan)->exists()
+            || MemberRegistration::where('nik_ktp', $request->nik_ktp)->exists()
+            || MemberRegistration::where('nik_karyawan', $request->nik_karyawan)->exists();
 
         if ($nikExist) {
             return response()->json([
@@ -86,7 +90,8 @@ class MemberRegistrationController extends Controller
         $registration = MemberRegistration::create([
             'referrer_id' => Auth::id(),
             'name' => $request->name,
-            'nik' => $request->nik,
+            'nik_ktp' => $request->nik_ktp,
+            'nik_karyawan' => $request->nik_karyawan,
             'department' => $request->department,
             'birth_place' => $request->birth_place,
             'birth_date' => $request->birth_date,

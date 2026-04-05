@@ -23,7 +23,24 @@ class TicketController extends Controller
 
     public function index()
     {
-        $tickets = Ticket::with('user')->latest()->get();
+        // Ambil ticket dengan hitungan reply yang belum dibaca (is_read = false) dari sisi user (role user)
+        // Ditambah dengan status is_read dari tiket itu sendiri
+        $tickets = Ticket::with(['user'])
+            ->withCount(['replies as unread_replies_count' => function ($query) {
+            $query->where('is_read', false)
+                ->whereHas('user', function ($q) {
+                $q->where('role', 'user');
+            }
+            );
+        }])
+            ->latest()
+            ->get();
+
+        $tickets->map(function ($ticket) {
+            $ticket->unread_count = $ticket->unread_replies_count + ($ticket->is_read ? 0 : 1);
+            return $ticket;
+        });
+
         return view('pages.tickets.index', compact('tickets'));
     }
 
@@ -35,7 +52,48 @@ class TicketController extends Controller
 
     public function edit(Ticket $ticket)
     {
+        // Tandai tiket itu sendiri sebagai terbaca
+        if (!$ticket->is_read) {
+            $ticket->update(['is_read' => true]);
+        }
+
+        // Tandai semua pesan dari user (bukan admin) sebagai terbaca
+        $ticket->replies()
+            ->where('is_read', false)
+            ->whereHas('user', function ($query) {
+            $query->where('role', 'user');
+        })
+            ->update(['is_read' => true]);
+
         return view('pages.tickets.edit', compact('ticket'));
+    }
+
+    public function getReplies(Request $request, Ticket $ticket)
+    {
+        // Mendapatkan JSON reply yang ID-nya lebih besar dari ID terakhir di Client
+        $lastId = $request->query('last_id', 0);
+
+        $newReplies = $ticket->replies()
+            ->with('user')
+            ->where('id', '>', $lastId)
+            ->orderBy('id', 'asc')
+            ->get();
+
+        $formattedReplies = $newReplies->map(function ($reply) {
+            $isMe = $reply->user_id == Auth::id();
+            return [
+            'id' => $reply->id,
+            'message' => $reply->message,
+            'sender' => $isMe ? 'You (Admin)' : ($reply->user->name ?? 'User'),
+            'date' => $reply->created_at->format('d M, H:i'),
+            'is_me' => $isMe,
+            ];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $formattedReplies
+        ]);
     }
 
     // MODIFIED: Fungsi untuk memproses balasan (Chat) dari Admin
@@ -65,14 +123,14 @@ class TicketController extends Controller
         $user = User::find($ticket->user_id);
         if ($user && !empty($user->fcm_token)) {
             $this->firebase->sendToTokens(
-                [$user->fcm_token],
-                'Tiket #' . $ticket->ticket_number,
+            [$user->fcm_token],
+                'Pesan',
                 'Admin: ' . Str::limit($request->message, 50),
-                [
-                    'id' => (string) $ticket->id,
-                    'type' => 'ticket_response',
-                    'status' => $ticket->status,
-                ]
+            [
+                'id' => (string)$ticket->id,
+                'type' => 'ticket_response',
+                'status' => $ticket->status,
+            ]
             );
         }
 
@@ -99,14 +157,14 @@ class TicketController extends Controller
 
         if ($user && !empty($user->fcm_token)) {
             $this->firebase->sendToTokens(
-                [$user->fcm_token],
-                'Tiket #' . $ticket->ticket_number, // TITLE
+            [$user->fcm_token],
+                'Pesan',
                 'Admin telah menanggapi: ' . Str::limit($request->admin_response, 50), // BODY
-                [
-                    'id' => (string) $ticket->id,
-                    'type' => 'ticket_response', // 👈 buat routing di Flutter
-                    'status' => $ticket->status,
-                ]
+            [
+                'id' => (string)$ticket->id,
+                'type' => 'ticket_response', // 👈 buat routing di Flutter
+                'status' => $ticket->status,
+            ]
             );
         }
 
@@ -126,16 +184,42 @@ class TicketController extends Controller
     public function previewPdf(Ticket $ticket)
     {
         // 1. Load data relasi yang dibutuhkan
-        // user = pemilik tiket, replies.user = pengirim chat
         $ticket->load(['user', 'replies.user']);
 
-        // 2. Generate PDF dari view yang dibuat tadi
-        $pdf = Pdf::loadView('pdf.ticket_report', compact('ticket'));
+        // 2. Ambil setting email organisasi
+        $emailOrganisasi = \App\Models\Setting::get(\App\Models\Setting::EMAIL_ORGANISASI, 'sppion18@gmail.com');
 
-        // 3. Atur ukuran kertas dan orientasi
+        // 3. Generate PDF dari view
+        $pdf = Pdf::loadView('pdf.ticket_report', compact('ticket', 'emailOrganisasi'));
+
+        // 4. Atur ukuran kertas
         $pdf->setPaper('a4', 'portrait');
 
-        // 4. Return stream (bukan download) agar bisa dilihat di browser/previewer
         return $pdf->stream('Laporan-Tiket-' . $ticket->ticket_number . '.pdf');
+    }
+
+    public function getUnreadData()
+    {
+        $tickets = Ticket::withCount(['replies as unread_replies_count' => function ($query) {
+            $query->where('is_read', false)
+                ->whereHas('user', function ($q) {
+                $q->where('role', 'user');
+            }
+            );
+        }])->get(['id', 'status', 'is_read']);
+
+        $totalTicketsCount = Ticket::count();
+
+        return response()->json([
+            'status' => 'success',
+            'total_tickets_count' => $totalTicketsCount,
+            'data' => $tickets->map(function ($ticket) {
+            return [
+                    'id' => $ticket->id,
+                    'unread_count' => $ticket->unread_replies_count + ($ticket->is_read ? 0 : 1),
+                    'status' => $ticket->status,
+                ];
+        })
+        ]);
     }
 }

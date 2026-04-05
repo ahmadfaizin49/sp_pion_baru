@@ -16,6 +16,11 @@ class PasswordOtp extends Model
         'expires_at',
         'used_at'
     ];
+    
+    protected $casts = [
+        'expires_at' => 'datetime',
+        'used_at' => 'datetime',
+    ];
 
     public $timestamps = true;
 }

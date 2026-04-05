@@ -6,9 +6,8 @@
     <title>Laporan Pesan</title>
     <style>
         @page {
-            margin: 160px 50px 50px 50px;
+            margin: 30px;
         }
-
 
         body {
             font-family: sans-serif;
@@ -20,11 +19,9 @@
         }
 
         header {
-            position: fixed;
-            top: -120px;
-            left: 0;
-            right: 0;
-            border-bottom: 3px double #000;
+            margin-bottom: 5px;
+            border-bottom: 4px double #000;
+            padding-bottom: 5px;
         }
 
         .kop-table {
@@ -33,7 +30,7 @@
         }
 
         .logo-kop {
-            width: 100px;
+            width: 80px;
         }
 
         .text-kop {
@@ -41,21 +38,24 @@
         }
 
         .text-kop h1 {
-            font-size: 18px;
+            font-size: 14px;
             margin: 0;
             text-transform: uppercase;
+            font-weight: bold;
         }
 
         .text-kop h2 {
-            font-size: 18px;
+            font-size: 14px;
             color: red;
             margin: 0;
+            text-transform: uppercase;
+            font-weight: bold;
         }
 
         .text-kop p {
-            font-size: 14px;
-            margin: 5px 0 0 0;
-            line-height: 1.3;
+            font-size: 11px;
+            margin: 2px 0 0 0;
+            line-height: 1.2;
             font-weight: normal;
         }
 
@@ -197,30 +197,42 @@
     <header>
         <table class="kop-table">
             <tr>
-                <td width="18%" style="text-align: center; vertical-align: middle;">
+                <td width="15%" style="text-align: center; vertical-align: middle;">
                     <img src="{{ public_path('assets/images/pion/logo_sp_pion.png') }}" class="logo-kop">
                 </td>
-                <td width="82%" class="text-kop">
-                    <h1>Serikat Pekerja Pungkook Indonesia Grobogan</h1>
+                <td width="85%" class="text-kop">
+                    <h1>SERIKAT PEKERJA PUNGKOOK INDONESIA GROBOGAN</h1>
                     <h2>(SP PION)</h2>
                     <p>
-                        Jl. Raya Purwodadi - Blora Km.18 RT.001 RW.002, Desa Tanjungrejo<br>
-                        Kecamatan Wirosari, Kabupaten Grobogan, Jawa Tengah - Indonesia 58192
+                        JL. Raya Purwodadi-Blora Km.18 RT.001 RW.002, Desa Tanjungrejo Kecamatan Wirosari, Kabupaten<br>
+                        Grobogan, Jawa Tengah-Indonesia 58192<br>
+                        <strong>Email : {{ $emailOrganisasi }}</strong>
                     </p>
                 </td>
             </tr>
         </table>
     </header>
 
-    <div class="ticket-header">
+    <div class="ticket-header" style="margin-top: 15px;">
+        <h3 style="text-align: center; text-transform: uppercase;">
+            @if ($ticket->type == 'report')
+                Pengaduan
+            @elseif($ticket->type == 'question')
+                Pertanyaan
+            @elseif($ticket->type == 'suggestion')
+                Saran
+            @else
+                {{ $ticket->type }}
+            @endif
+        </h3>
         <table>
             <tr>
-                <td style="width: 150px;"><strong>Nama</strong></td>
+                <td style="width: 120px;"><strong>Nama</strong></td>
                 <td style="width: 10px;">:</td>
                 <td>{{ $ticket->user->name }}</td>
             </tr>
             <tr>
-                <td><strong>Tanggal Buat</strong></td>
+                <td><strong>Tanggal</strong></td>
                 <td>:</td>
                 <td>
                     {{ \Carbon\Carbon::parse($ticket->created_at)->locale('id')->isoFormat('D MMMM YYYY HH:mm') }}
@@ -231,7 +243,7 @@
                 <td>:</td>
                 <td>
                     @if ($ticket->type == 'report')
-                        Laporan
+                        Pengaduan
                     @elseif($ticket->type == 'question')
                         Pertanyaan
                     @elseif($ticket->type == 'suggestion')

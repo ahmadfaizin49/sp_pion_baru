@@ -5,6 +5,7 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/date-picker.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/daterange-picker.css') }}">
 @endpush
@@ -31,7 +32,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -40,7 +41,7 @@
 
                         {{-- Alert Error --}}
                         @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-danger alert-dismissible fade show" role="alert">
                                 <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -58,70 +59,58 @@
 
 
                             <!-- Title -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Judul</label>
-                                        <input class="form-control" type="text" name="title"
-                                            value="{{ old('title', $vote->title) }}" required />
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Judul</label>
+                                <input class="form-control" type="text" name="title"
+                                    value="{{ old('title', $vote->title) }}" required />
                             </div>
 
                             <!-- Input Description -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Deskripsi</label>
-                                        <textarea class="form-control" name="description" rows="3">{{ old('description', $vote->description) }}</textarea>
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Deskripsi</label>
+                                <textarea class="form-control" name="description" rows="3">{{ old('description', $vote->description) }}</textarea>
                             </div>
 
-                            <!-- Candidates (read-only) -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Kandidat</label>
-                                        <div class="form-control-plaintext py-0">
-                                            @foreach ($vote->options as $option)
-                                                {{ $loop->iteration }}. {{ $option->label }}<br>
-                                            @endforeach
+                            <!-- Candidates -->
+                            <div class="mb-3">
+                                <label>Kandidat & Visi</label>
+                                <div class="row">
+                                    @foreach ($vote->options as $option)
+                                        <div class="col-md-6 mb-3">
+                                            <div class="p-2 border rounded">
+                                                <span class="fw-bold d-block mb-1">{{ $loop->iteration }}. {{ $option->label }}</span>
+                                                <div class="vision-field pt-1 border-top">
+                                                    <label class="small text-muted mb-1">Visi Misi</label>
+                                                    <textarea class="form-control form-control-sm" name="visions[{{ $option->id }}]" rows="2" placeholder="Masukkan visi misi...">{{ old('visions.' . $option->id, $option->vision) }}</textarea>
+                                                </div>
+                                            </div>
                                         </div>
-                                    </div>
+                                    @endforeach
                                 </div>
                             </div>
 
                             <!-- Status -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Status</label>
-                                        <div class="media-body">
-                                            <label class="switch">
-                                                <!-- hidden input supaya selalu ada value -->
-                                                <input type="hidden" name="is_active" value="0">
+                            <div class="mb-3">
+                                <label>Status</label>
+                                <div class="media-body">
+                                    <label class="switch">
+                                        <!-- hidden input supaya selalu ada value -->
+                                        <input type="hidden" name="is_active" value="0">
 
-                                                <!-- checkbox toggle -->
-                                                <input type="checkbox" name="is_active" value="1"
-                                                    {{ $vote->is_active ? 'checked' : '' }}>
+                                        <!-- checkbox toggle -->
+                                        <input type="checkbox" name="is_active" value="1"
+                                            {{ $vote->is_active ? 'checked' : '' }}>
 
-                                                <span class="switch-state"></span>
-                                            </label>
-                                        </div>
-                                    </div>
+                                        <span class="switch-state"></span>
+                                    </label>
                                 </div>
                             </div>
 
                             <!-- Button Update -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="text-end">
-                                        <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-save me-1"></i> Update
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="text-end">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-save me-1"></i> Update
+                                </button>
                             </div>
                         </form>
                         {{-- End Form --}}

@@ -52,5 +52,11 @@
             }
         });
         setInterval(getDirAttributeValue, 5000);
+        // Auto-dismiss alerts after 5 seconds
+        setTimeout(function() {
+            $(".alert-dismissible").fadeOut('slow', function() {
+                $(this).remove();
+            });
+        }, 3000);
     });
 </script>

@@ -5,8 +5,20 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/datatables.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <style>
+        .table-responsive table {
+            white-space: nowrap;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+    </style>
 @endpush
 
 @section('content')
@@ -21,7 +33,7 @@
 
                         {{-- Tombol di kanan --}}
                         <a class="btn btn-primary" href="{{ route('broadcasts.create') }}">
-                            <i class="fa fa-plus me-1"></i> Create
+                            <i class="fa fa-plus me-1"></i> Tambah
                         </a>
                     </div>
                 </div>
@@ -33,7 +45,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -41,61 +53,63 @@
                         @endif
 
                         {{-- Table untuk list votes --}}
-                        <div class="table-responsive">
-                            <table class="display" id="basic-1">
-                                <thead>
-                                    <tr>
-                                        <th class="dt-col-no">No</th>
-                                        <th>Title</th>
-                                        <th>Users</th>
-                                        <th>Created At</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @forelse($broadcasts as $broadcast)
+                        @if($broadcasts->count() > 0)
+                            <div class="table-responsive">
+                                <table class="display" id="basic-1">
+                                    <thead>
                                         <tr>
-                                            <td class="dt-col-no">{{ $loop->iteration }}</td>
-
-                                            <td>{{ $broadcast->title }}</td>
-                                            <td>
-                                                @if ($broadcast->users->count())
-                                                    {{ $broadcast->users->pluck('name')->join(', ') }}
-                                                @else
-                                                    <em>All Users</em>
-                                                @endif
-                                            </td>
-
-                                            <td>{{ $broadcast->created_at->format('d/m/y H:i') }}</td>
-
-                                            <td>
-                                                <!-- Edit button -->
-                                                <a href="" class="btn btn-success btn-sm">
-                                                    Edit
-                                                </a>
-
-                                                <!-- Show button -->
-                                                <a href="" class="btn btn-secondary btn-sm">
-                                                    Show
-                                                </a>
-
-                                                <!-- Delete button -->
-                                                <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal"
-                                                    data-bs-target="#deleteModal"
-                                                    data-action="{{ route('broadcasts.destroy', $broadcast->id) }}"
-                                                    data-name="{{ $broadcast->title }}">
-                                                    Delete
-                                                </a>
-                                            </td>
+                                            <th class="dt-col-no">No</th>
+                                            <th>Judul</th>
+                                            <th>User Penerima</th>
+                                            <th>Tanggal Kirim</th>
+                                            <th>Action</th>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" class="text-center text-muted">No broadcast data</td>
-                                        </tr>
-                                    @endforelse
-                                </tbody>
-                            </table>
-                        </div>
+                                    </thead>
+                                    <tbody>
+                                        @foreach ($broadcasts as $broadcast)
+                                            <tr>
+                                                <td class="dt-col-no">{{ $loop->iteration }}</td>
+
+                                                <td>{{ $broadcast->title }}</td>
+                                                <td>
+                                                    @if ($broadcast->users->count())
+                                                        {{ $broadcast->users->pluck('name')->join(', ') }}
+                                                    @else
+                                                        <em>Semua User</em>
+                                                    @endif
+                                                </td>
+
+                                                <td>{{ $broadcast->created_at->format('d/m/y H:i') }}</td>
+
+                                                <td>
+                                                    <!-- Edit button -->
+                                                    <a href="" class="btn btn-success btn-sm">
+                                                        Edit
+                                                    </a>
+
+                                                    <!-- Show button -->
+                                                    <a href="" class="btn btn-secondary btn-sm">
+                                                        Lihat
+                                                    </a>
+
+                                                    <!-- Delete button -->
+                                                    <a href="#" class="btn btn-sm btn-danger" data-bs-toggle="modal"
+                                                        data-bs-target="#deleteModal"
+                                                        data-action="{{ route('broadcasts.destroy', $broadcast->id) }}"
+                                                        data-name="{{ $broadcast->title }}">
+                                                        Hapus
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        @endforeach
+                                    </tbody>
+                                </table>
+                            </div>
+                        @else
+                            <div class="text-center p-5">
+                                <span class="text-muted">Tidak ada data broadcast</span>
+                            </div>
+                        @endif
                         {{-- End Table --}}
                     </div>
                 </div>
@@ -109,18 +123,18 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Confirm Delete</h5>
+                    <h5 class="modal-title">Konfirmasi Hapus</h5>
                     <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <p>Are you sure you want to delete this broadcast <strong id="deleteItemName"></strong> ?</p>
+                    <p>Apakah Anda yakin ingin menghapus broadcast <strong id="deleteItemName"></strong>?</p>
                 </div>
                 <div class="modal-footer">
                     <form id="deleteForm" method="POST">
                         @csrf
                         @method('DELETE')
-                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Close</button>
-                        <button class="btn btn-danger" type="submit">Delete</button>
+                        <button class="btn btn-light" type="button" data-bs-dismiss="modal">Tutup</button>
+                        <button class="btn btn-danger" type="submit">Hapus</button>
                     </form>
                 </div>
             </div>

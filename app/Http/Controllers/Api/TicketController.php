@@ -27,7 +27,13 @@ class TicketController extends Controller
         }
 
         // Paginate
-        $tickets = $query->paginate(10);
+        $tickets = $query->withCount(['replies as unread_count' => function ($q) {
+                $q->where('is_read', false)
+                    ->whereHas('user', function ($u) {
+                        $u->where('role', 'admin');
+                    });
+            }])
+            ->paginate(10);
 
         // Map hanya field penting
         $data = $tickets->map(function ($ticket) {
@@ -37,6 +43,7 @@ class TicketController extends Controller
                 'type' => $ticket->type,
                 'title' => $ticket->title,
                 'status' => $ticket->status,
+                'unread_count' => $ticket->unread_count,
                 'created_at' => $ticket->created_at,
             ];
         });
@@ -69,6 +76,14 @@ class TicketController extends Controller
         $ticket->load(['replies' => function ($query) {
             $query->orderBy('created_at', 'asc')->with('user:id,name,role'); // Ambil field penting aja
         }]);
+
+        // MODIFIED: Tandai semua pesan dari admin sebagai terbaca
+        $ticket->replies()
+            ->where('is_read', false)
+            ->whereHas('user', function ($query) {
+                $query->where('role', 'admin');
+            })
+            ->update(['is_read' => true]);
 
         return response()->json([
             'status' => true,
@@ -166,6 +181,7 @@ class TicketController extends Controller
             'description' => $request->description,
             'attachment' => $attachmentPath,
             'status' => 'pending',
+            'is_read' => false,
         ]);
 
         return response()->json([

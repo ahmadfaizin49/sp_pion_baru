@@ -9,7 +9,8 @@ class MemberRegistration extends Model
     protected $fillable = [
         'referrer_id',
         'name',
-        'nik',
+        'nik_ktp',
+        'nik_karyawan',
         'department',
         'birth_place',
         'birth_date',
@@ -23,6 +24,7 @@ class MemberRegistration extends Model
     ];
 
     protected $casts = [
+        'referrer_id' => 'integer',
         'birth_date' => 'date',
     ];
 

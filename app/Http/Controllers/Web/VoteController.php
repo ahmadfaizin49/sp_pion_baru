@@ -28,7 +28,7 @@ class VoteController extends Controller
     public function create()
     {
         $users = User::where('role', 'user')
-            ->orderBy('name', 'asc') // urutkan A-Z
+            ->orderBy('name', 'asc')
             ->get();
 
         return view('pages.votes.create', compact('users'));
@@ -40,14 +40,17 @@ class VoteController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'options' => 'required|array|min:2',
+            'options' => 'required|array|min:2|max:8',
             'options.*' => 'exists:users,id',
+            'visions' => 'nullable|array',
+            'visions.*' => 'nullable|string',
         ], [
             'title.required' => 'Judul voting wajib diisi.',
             'title.max' => 'Judul voting maksimal 255 karakter.',
             'options.required' => 'Minimal pilih 2 kandidat.',
             'options.array' => 'Format kandidat tidak valid.',
             'options.min' => 'Voting harus memiliki minimal 2 kandidat.',
+            'options.max' => 'Voting maksimal memiliki 8 kandidat.',
             'options.*.exists' => 'Salah satu kandidat tidak ditemukan.',
         ]);
 
@@ -64,6 +67,7 @@ class VoteController extends Controller
                 $vote->options()->create([
                     'user_id' => $user->id,
                     'label' => $user->name,
+                    'vision' => $request->visions[$userId] ?? null,
                 ]);
             }
 
@@ -90,14 +94,46 @@ class VoteController extends Controller
 
     public function show(Vote $vote)
     {
-        // Hitung suara per opsi secara otomatis
+        // Hitung suara per opsi secara otomatis dan load relasi user (kandidat)
         $vote->load(['options' => function ($query) {
-            $query->withCount('results')->orderBy('results_count', 'desc');
+            $query->with(['user'])->withCount('results')->orderBy('label', 'asc');
         }]);
 
-        $totalVotes = $vote->results()->count();
-
         return view('pages.votes.show', compact('vote'));
+    }
+
+    public function getResults(Vote $vote)
+    {
+        $vote->load(['options' => function ($query) {
+            $query->withCount('results')->orderBy('label', 'asc');
+        }]);
+
+        $totalVotesCount = $vote->options->sum('results_count');
+        $totalEligibleUsers = User::where('role', 'user')->count();
+        $participationRate = $totalEligibleUsers > 0
+            ? round(($totalVotesCount / $totalEligibleUsers) * 100, 1)
+            : 0;
+
+        $options = $vote->options->map(function ($option) use ($totalVotesCount) {
+            $optionPercentage = $totalVotesCount > 0
+                ? round(($option->results_count / $totalVotesCount) * 100, 1)
+                : 0;
+            return [
+                'id' => $option->id,
+                'results_count' => $option->results_count,
+                'percentage' => $optionPercentage,
+            ];
+        });
+
+        return response()->json([
+            'status' => 'success',
+            'data' => [
+                'options' => $options,
+                'total_votes_count' => $totalVotesCount,
+                'total_eligible_users' => $totalEligibleUsers,
+                'participation_rate' => $participationRate,
+            ]
+        ]);
     }
 
     public function edit(Vote $vote)
@@ -114,18 +150,30 @@ class VoteController extends Controller
     {
         $request->validate([
             'title' => 'required|string|max:255',
+            'description' => 'nullable|string',
             'is_active' => 'nullable|boolean',
+            'visions' => 'nullable|array',
+            'visions.*' => 'nullable|string',
         ], [
             'title.required' => 'Judul voting wajib diisi.',
             'title.max' => 'Judul voting maksimal 255 karakter.',
         ]);
 
+        DB::transaction(function () use ($request, $vote) {
+            $vote->update([
+                'title' => $request->title,
+                'description' => $request->description,
+                'is_active' => $request->has('is_active') ? $request->is_active : $vote->is_active,
+            ]);
 
-        $vote->update([
-            'title' => $request->title,
-            'is_active' => $request->has('is_active') ? $request->is_active : $vote->is_active,
-
-        ]);
+            if ($request->has('visions')) {
+                foreach ($request->visions as $optionId => $vision) {
+                    $vote->options()->where('id', $optionId)->update([
+                        'vision' => $vision
+                    ]);
+                }
+            }
+        });
 
         return redirect()->route('votes.index')->with('success', 'Voting berhasil diperbarui.');
     }
@@ -138,50 +186,3 @@ class VoteController extends Controller
         return redirect()->route('votes.index')->with('success', 'Voting berhasil dihapus.');
     }
 }
-
-
-    // public function store(Request $request)
-    // {
-    //     $request->validate([
-    //         'title' => 'required|string|max:255',
-    //         'description' => 'nullable|string',
-    //         'options' => 'required|array|min:2',
-    //         'options.*' => 'exists:users,id',
-    //         'period' => 'required|string',
-    //     ], [
-    //         'title.required' => 'Judul voting wajib diisi.',
-    //         'title.max' => 'Judul voting maksimal 255 karakter.',
-    //         'options.required' => 'Minimal pilih 2 kandidat.',
-    //         'options.array' => 'Format kandidat tidak valid.',
-    //         'options.min' => 'Voting harus memiliki minimal 2 kandidat.',
-    //         'options.*.exists' => 'Salah satu kandidat tidak ditemukan.',
-    //         'period.required' => 'Periode voting wajib diisi.',
-    //     ]);
-
-    //     [$start, $end] = explode(' - ', $request->period);
-
-    //     $startAt = Carbon::createFromFormat('d/m/Y', $start)->startOfDay();
-    //     $endAt   = Carbon::createFromFormat('d/m/Y', $end)->endOfDay();
-
-    //     DB::transaction(function () use ($request, $startAt, $endAt) {
-
-    //         $vote = Vote::create([
-    //             'title' => $request->title,
-    //             'description' => $request->description,
-    //             'start_at' => $startAt,
-    //             'end_at' => $endAt,
-    //             'is_active'   => true
-    //         ]);
-
-    //         foreach ($request->options as $userId) {
-    //             $user = User::find($userId);
-
-    //             $vote->options()->create([
-    //                 'user_id' => $user->id,
-    //                 'label' => $user->name,
-    //             ]);
-    //         }
-    //     });
-
-    //     return redirect()->route('votes.create')->with('success', 'Voting berhasil dibuat.');
-    // }

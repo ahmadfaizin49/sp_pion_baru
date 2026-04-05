@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('vote_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained('users')->cascadeOnDelete(); // kandidat
             $table->string('label'); // nama kandidat
+            $table->text('vision')->nullable(); // visi kandidat
             $table->timestamps();
 
             // Penting: Satu user cuma bisa milih 1x di satu voting yang sama

@@ -15,6 +15,12 @@ class Vote extends Model
         'is_active',
     ];
 
+    protected $casts = [
+        'is_active' => 'boolean',
+        'options_count' => 'integer',
+        'results_count' => 'integer',
+    ];
+
 
     // Relasi ke kandidat / options
     public function options()

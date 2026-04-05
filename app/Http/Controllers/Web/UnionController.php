@@ -36,22 +36,25 @@ class UnionController extends Controller
             [
                 'title' => 'required|string|max:255',
                 'description' => 'nullable|string',
-                'file' => 'required|file|mimes:pdf|max:10240', // MAX 10MB
-                'image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120', // MAX 5MB
+                'file' => 'required_without:image|file|mimes:pdf|max:512000',
+                'image' => 'required_without:file|image|mimes:jpg,jpeg,png|max:5120',
             ],
             [
                 'title.required' => 'Judul wajib diisi.',
                 'title.max' => 'Judul maksimal 255 karakter.',
-                'file.required' => 'File PDF wajib diunggah.',
+                'file.required_without' => 'Salah satu (File PDF atau Gambar) wajib diunggah.',
                 'file.mimes' => 'File harus berupa PDF.',
-                'file.max' => 'File maksimal 10MB.',
+                'file.max' => 'File maksimal 500MB.',
+                'image.required_without' => 'Salah satu (File PDF atau Gambar) wajib diunggah.',
                 'image.mimes' => 'Image harus JPG, JPEG, atau PNG.',
                 'image.max' => 'Image maksimal 5MB.',
             ]
         );
 
-        // Upload file PDF
-        $filePath = $request->file('file')->store('union/files', 'public');
+        // Upload file PDF jika ada
+        $filePath = $request->hasFile('file')
+            ? $request->file('file')->store('union/files', 'public')
+            : null;
 
         // Upload image jika ada
         $imagePath = $request->hasFile('image')
@@ -104,20 +107,22 @@ class UnionController extends Controller
         $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'nullable|file|mimes:pdf|max:10240',
+            'file' => 'nullable|file|mimes:pdf|max:512000',
             'image' => 'nullable|image|mimes:jpg,jpeg,png|max:5120',
         ], [
             'title.required' => 'Judul wajib diisi.',
             'title.max' => 'Judul maksimal 255 karakter.',
             'file.mimes' => 'File harus berupa PDF.',
-            'file.max' => 'File maksimal 10MB.',
+            'file.max' => 'File maksimal 500MB.',
             'image.mimes' => 'Image harus JPG, JPEG, atau PNG.',
             'image.max' => 'Image maksimal 5MB.',
         ]);
 
         // Update PDF jika ada
         if ($request->hasFile('file')) {
-            Storage::disk('public')->delete($union->file_path);
+            if ($union->file_path) {
+                Storage::disk('public')->delete($union->file_path);
+            }
             $union->file_path = $request->file('file')->store('union/files', 'public');
         }
 
@@ -138,7 +143,9 @@ class UnionController extends Controller
 
     public function destroy(Union $union)
     {
-        Storage::disk('public')->delete($union->file_path);
+        if ($union->file_path) {
+            Storage::disk('public')->delete($union->file_path);
+        }
         if ($union->image_path) {
             Storage::disk('public')->delete($union->image_path);
         }

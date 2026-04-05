@@ -13,6 +13,12 @@ class VoteOption extends Model
         'vote_id',
         'user_id',
         'label',
+        'vision',
+    ];
+
+    protected $casts = [
+        'vote_id' => 'integer',
+        'user_id' => 'integer',
     ];
 
     // Relasi balik ke Vote

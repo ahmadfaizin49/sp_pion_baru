@@ -13,6 +13,13 @@ class TicketReply extends Model
         'ticket_id',
         'user_id',
         'message',
+        'is_read',
+    ];
+
+    protected $casts = [
+        'ticket_id' => 'integer',
+        'user_id' => 'integer',
+        'is_read' => 'boolean',
     ];
 
     public function ticket()

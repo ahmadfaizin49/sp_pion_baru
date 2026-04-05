@@ -3,8 +3,8 @@
 use App\Http\Controllers\Web\AuthController;
 use App\Http\Controllers\Web\BroadcastController;
 use App\Http\Controllers\Web\DashboardController;
+use App\Http\Controllers\Web\DeviceController;
 use App\Http\Controllers\Web\FinancialController;
-use App\Http\Controllers\Web\InformatinController;
 use App\Http\Controllers\Web\InformationController;
 use App\Http\Controllers\Web\LearningController;
 use App\Http\Controllers\Web\MemberRegistrationController;
@@ -14,6 +14,7 @@ use App\Http\Controllers\Web\SocialController;
 use App\Http\Controllers\Web\TicketController;
 use App\Http\Controllers\Web\UnionController;
 use App\Http\Controllers\Web\UserController;
+use App\Http\Controllers\Web\SettingController;
 use App\Http\Controllers\Web\VisionController;
 use App\Http\Controllers\Web\VoteController;
 use Illuminate\Support\Facades\Route;
@@ -48,6 +49,14 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{user}/edit', [UserController::class, 'edit'])->name('edit');
         Route::put('/{user}', [UserController::class, 'update'])->name('update');
         Route::delete('/{user}', [UserController::class, 'destroy'])->name('destroy');
+
+        // KTA Route
+        Route::get('/{user}/kta', [UserController::class, 'generateKta'])->name('kta');
+
+        // Excel Routes
+        Route::get('/excel/export', [UserController::class, 'export'])->name('export');
+        Route::get('/excel/template', [UserController::class, 'downloadTemplate'])->name('template');
+        Route::post('/excel/import', [UserController::class, 'import'])->name('import');
     });
 
     // Informations Routes
@@ -122,6 +131,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/create', [VoteController::class, 'create'])->name('create');
         Route::post('/store', [VoteController::class, 'store'])->name('store');
         Route::get('/{vote}', [VoteController::class, 'show'])->name('show');
+        Route::get('/{vote}/results', [VoteController::class, 'getResults'])->name('results');
         Route::get('/{vote}/edit', [VoteController::class, 'edit'])->name('edit');
         Route::put('/{vote}', [VoteController::class, 'update'])->name('update');
         Route::delete('/{vote}', [VoteController::class, 'destroy'])->name('destroy');
@@ -129,9 +139,11 @@ Route::middleware(['auth'])->group(function () {
 
     // Tickets Routes
     Route::prefix('tickets')->name('tickets.')->group(function () {
+        Route::get('/unread-data', [TicketController::class, 'getUnreadData'])->name('unread.data');
         Route::get('/', [TicketController::class, 'index'])->name('index');
         Route::get('/{ticket}', [TicketController::class, 'show'])->name('show');
         Route::get('/{ticket}/edit', [TicketController::class, 'edit'])->name('edit');
+        Route::get('/{ticket}/replies', [TicketController::class, 'getReplies'])->name('replies');
         Route::post('/{ticket}/reply', [TicketController::class, 'reply'])->name('reply');
         Route::put('/{ticket}', [TicketController::class, 'update'])->name('update');
         Route::delete('/{ticket}', [TicketController::class, 'destroy'])->name('destroy');
@@ -145,6 +157,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/{member}/edit', [MemberRegistrationController::class, 'edit'])->name('edit');
         Route::put('/{member}', [MemberRegistrationController::class, 'update'])->name('update');
         Route::post('/{member}/approve', [MemberRegistrationController::class, 'approve'])->name('approve');
+        Route::post('/{member}/reject', [MemberRegistrationController::class, 'reject'])->name('reject');
+        Route::delete('/{member}', [MemberRegistrationController::class, 'destroy'])->name('destroy');
         Route::get('/{member}/pdf-preview', [MemberRegistrationController::class, 'previewPdf'])->name('pdf');
     });
 
@@ -160,5 +174,19 @@ Route::middleware(['auth'])->group(function () {
     Route::prefix('vision')->name('vision.')->group(function () {
         Route::get('/edit', [VisionController::class, 'edit'])->name('edit');
         Route::put('/update', [VisionController::class, 'update'])->name('update');
+    });
+
+    // Device Routes
+    Route::prefix('devices')->name('devices.')->group(function () {
+        Route::get('/', [DeviceController::class, 'index'])->name('index');
+        Route::delete('/{device}', [DeviceController::class, 'destroy'])->name('destroy');
+    });
+
+    // Settings Routes
+    Route::prefix('settings')->name('settings.')->group(function () {
+        Route::get('/edit', [SettingController::class, 'edit'])->name('edit');
+        Route::put('/update', [SettingController::class, 'update'])->name('update');
+        Route::post('/store', [SettingController::class, 'store'])->name('store');
+        Route::delete('/{setting}', [SettingController::class, 'destroy'])->name('destroy');
     });
 });

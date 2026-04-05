@@ -41,6 +41,7 @@ Route::middleware('auth:sanctum')->group(function () {
     // ----- Auth Route -----
     Route::prefix('auth')->group(function () {
         Route::get('/profile', [AuthController::class, 'profile']);
+        Route::get('/download/kta', [AuthController::class, 'downloadKta']);
 
         Route::post('/update-profile', [AuthController::class, 'updateProfile']);
         Route::post('/update-password', [AuthController::class, 'updatePassword']);
@@ -104,7 +105,9 @@ Route::middleware('auth:sanctum')->group(function () {
     });
 
     // ----- Feed Route -----
-    Route::get('/feed', [FeedController::class, 'index']);
+    Route::prefix('feeds')->group(function () {
+        Route::get('/', [FeedController::class, 'index']);
+    });
 
     // ----- Vision Route -----
     Route::get('/vision', [VisionController::class, 'show']);

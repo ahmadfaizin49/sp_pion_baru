@@ -20,7 +20,8 @@ class User extends Authenticatable
      */
     protected $fillable = [
         'name',
-        'nik',
+        'nik_ktp',
+        'nik_karyawan',
         'username',
         'kta_number',
         'barcode_number',
@@ -29,6 +30,7 @@ class User extends Authenticatable
         'phone',
         'birth_place',
         'birth_date',
+        'joint_date',
         'address',
         'gender',
         'religion',
@@ -36,6 +38,8 @@ class User extends Authenticatable
         'image_path',
         'password',
         'pin',
+        'password_hint',
+        'pin_hint',
         'role',
         'fcm_token'
     ];
@@ -49,6 +53,8 @@ class User extends Authenticatable
         'password',
         'remember_token',
         'pin',
+        'password_hint',
+        'pin_hint',
     ];
 
     /**
@@ -56,7 +62,15 @@ class User extends Authenticatable
      */
     public function referrals()
     {
-        return $this->hasMany(MemberRegistration::class, 'referrer_id');
+        return $this->hasMany(MemberRegistration::class , 'referrer_id');
+    }
+
+    /**
+     * Relasi ke Device (Satu user punya satu device)
+     */
+    public function device()
+    {
+        return $this->hasOne(UserDevice::class , 'user_id', 'id');
     }
 
     /**
@@ -69,6 +83,9 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'birth_date' => 'date',
+            'password_hint' => 'encrypted',
+            'pin_hint' => 'encrypted',
         ];
     }
 }

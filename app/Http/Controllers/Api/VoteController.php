@@ -33,9 +33,8 @@ class VoteController extends Controller
             return [
                 'id' => $vote->id,
                 'title' => $vote->title,
-                'description' => $vote->description,
                 'is_active' => (bool)$vote->is_active,
-                'options_count' => $vote->options_count,
+                'options_count' => (int)$vote->options_count,
                 'created_at' => $vote->created_at->format('Y-m-d H:i:s'),
             ];
         });
@@ -65,9 +64,9 @@ class VoteController extends Controller
         $user = $request->user();
         $totalUsers = User::where('role', 'user')->count();
 
-        // 1. Load options TANPA relasi user (karena kita sudah punya 'label')
+        // 1. Load options dengan relasi user untuk ambil detail profil
         $vote->load(['options' => function ($query) {
-            $query->orderBy('label', 'asc');
+            $query->with('user')->orderBy('label', 'asc');
         }]);
 
         // 2. Hitung total suara
@@ -85,17 +84,34 @@ class VoteController extends Controller
         // 4. Transformasi data agar rapi dan aman
         $options = $vote->options->map(function ($option) use ($vote) {
             $optionCount = VoteResult::where('vote_option_id', $option->id)->count();
+            $candidate = $option->user;
 
             return [
                 'id' => $option->id,
-                'label' => $option->label, // Pakai label yang sudah ada
-                'votes_count' => $optionCount,
-                'percentage' => $vote->results_count > 0
+                'user_id' => $option->user_id,
+                'label' => $option->label,
+                'vision' => $option->vision,
+                'image' => $candidate && $candidate->image_path
+                    ? asset('storage/' . $candidate->image_path)
+                    : null,
+                'votes_count' => (int)$optionCount,
+                'percentage' => (int)$vote->results_count > 0
                     ? round(($optionCount / $vote->results_count) * 100, 1)
                     : 0,
-                'image_url' => $option->user && $option->user->image_path
-                    ? asset('storage/' . $option->user->image_path)
-                    : null,
+                'profile' => $candidate ? [
+                    'name' => $candidate->name,
+                    'nik_ktp' => $candidate->nik_ktp,
+                    'nik_karyawan' => $candidate->nik_karyawan,
+                    'department' => $candidate->department,
+                    'email' => $candidate->email,
+                    'phone' => $candidate->phone,
+                    'birth_place' => $candidate->birth_place,
+                    'birth_date' => $candidate->birth_date,
+                    'address' => $candidate->address,
+                    'gender' => $candidate->gender,
+                    'religion' => $candidate->religion,
+                    'education' => $candidate->education,
+                ] : null,
             ];
         });
 
@@ -107,9 +123,10 @@ class VoteController extends Controller
                 'id' => $vote->id,
                 'title' => $vote->title,
                 'description' => $vote->description,
-                'results_count' => $vote->results_count,
+                'total_votes_count' => (int)$vote->results_count,
+                'total_eligible_users' => (int)$totalUsers,
                 'is_voted' => $vote->is_voted,
-                'participation_percentage' => $vote->participation_percentage,
+                'participation_percentage' => (float)$vote->participation_percentage,
                 'options' => $options
             ]
         ]);

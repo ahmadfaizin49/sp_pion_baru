@@ -18,7 +18,8 @@ return new class extends Migration
 
             // Form Data
             $table->string('name');
-            $table->string('nik')->unique();
+            $table->string('nik_ktp')->unique();
+            $table->string('nik_karyawan')->unique();
             $table->string('department');
             $table->string('birth_place');
             $table->date('birth_date');

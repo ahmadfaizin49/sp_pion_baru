@@ -11,9 +11,9 @@
         <div class="nav-right col pull-right right-menu p-0">
             <ul class="nav-menus">
                 <li class="onhover-dropdown p-0">
-                    <button type="button" class="btn btn-primary-light" data-bs-toggle="modal"
+                    <button type="button" class="btn-premium btn-premium-lg btn-premium-primary btn-premium-white border-0" data-bs-toggle="modal"
                         data-bs-target="#logoutModal">
-                        <i data-feather="log-out"></i> Log out
+                        <i class="fa fa-sign-out me-1"></i> Logout
                     </button>
                 </li>
             </ul>

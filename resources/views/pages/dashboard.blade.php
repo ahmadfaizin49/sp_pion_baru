@@ -4,6 +4,13 @@
     Dashboard
 @endsection
 
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <style>
+        /* Local overrides if needed */
+    </style>
+@endpush
+
 
 @section('content')
     <div class="container-fluid">
@@ -19,11 +26,10 @@
             </div>
 
             <!-- Start Baris 1 -->
-
             {{-- Card 1 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-primary b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="users"></i></div>
                             <div class="media-body">
@@ -39,23 +45,7 @@
             {{-- Card 2 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-primary b-r-4 card-body">
-                        <div class="media static-top-widget">
-                            <div class="align-self-center text-center"><i data-feather="user-plus"></i></div>
-                            <div class="media-body">
-                                <span class="m-0">Regis Member</span>
-                                <h4 class="mb-0 counter">{{ $totalRegistrations }}</h4>
-                                <i class="icon-bg" data-feather="user-plus"></i>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            {{-- Card 3 --}}
-            <div class="col-sm-6 col-xl-4 col-lg-6">
-                <div class="card o-hidden border-0">
-                    <div class="bg-primary b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="edit"></i></div>
                             <div class="media-body">
@@ -68,14 +58,10 @@
                 </div>
             </div>
 
-            <!-- End Baris 1 -->
-
-            <!-- Start Baris 2 -->
-
-            {{-- Card 4 --}}
+            {{-- Card 3 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-secondary b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="layers"></i></div>
                             <div class="media-body">
@@ -87,11 +73,13 @@
                     </div>
                 </div>
             </div>
+            <!-- End Baris 1 -->
 
-            {{-- Card 5 --}}
+            <!-- Start Baris 2 -->
+            {{-- Card 4 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-secondary b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="dollar-sign"></i></div>
                             <div class="media-body">
@@ -104,10 +92,10 @@
                 </div>
             </div>
 
-            {{-- Card 6 --}}
+            {{-- Card 5 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-secondary b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="globe"></i></div>
                             <div class="media-body">
@@ -120,14 +108,10 @@
                 </div>
             </div>
 
-            <!-- End Baris 2 -->
-
-            <!-- Start Baris 3 -->
-
-            {{-- Card 7 --}}
+            {{-- Card 6 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-warning b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="share-2"></i></div>
                             <div class="media-body">
@@ -139,11 +123,29 @@
                     </div>
                 </div>
             </div>
+            <!-- End Baris 2 -->
+
+            <!-- Start Baris 3 -->
+            {{-- Card 7 --}}
+            <div class="col-sm-6 col-xl-4 col-lg-6">
+                <div class="card o-hidden border-0">
+                    <div class="bg-premium-primary b-r-4 card-body">
+                        <div class="media static-top-widget">
+                            <div class="align-self-center text-center"><i data-feather="send"></i></div>
+                            <div class="media-body">
+                                <span class="m-0">Serikat SP PION</span>
+                                <h4 class="mb-0 counter">{{ $totalUnions }}</h4>
+                                <i class="icon-bg" data-feather="send"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             {{-- Card 8 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-warning b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
                             <div class="align-self-center text-center"><i data-feather="check-square"></i></div>
                             <div class="media-body">
@@ -159,33 +161,35 @@
             {{-- Card 9 --}}
             <div class="col-sm-6 col-xl-4 col-lg-6">
                 <div class="card o-hidden border-0">
-                    <div class="bg-warning b-r-4 card-body">
+                    <div class="bg-premium-primary b-r-4 card-body">
                         <div class="media static-top-widget">
-                            <div class="align-self-center text-center"><i data-feather="headphones"></i></div>
+                            <div class="align-self-center text-center"><i data-feather="message-circle"></i></div>
                             <div class="media-body">
-                                <span class="m-0">Pengaduan</span>
+                                <span class="m-0">Pesan</span>
                                 <h4 class="mb-0 counter">{{ $totalTickets }}</h4>
-                                <i class="icon-bg" data-feather="headphones"></i>
+                                <i class="icon-bg" data-feather="message-circle"></i>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-
             <!-- End Baris 3 -->
 
 
             {{-- Table --}}
-            <div class="col-xl-12 recent-order-sec">
-                <div class="card">
-                    <div class="card-body">
-                        <div class="table-responsive">
+            @if ($recentMembers->isNotEmpty())
+                <div class="col-sm-12">
+                    <div class="card">
+                        <div class="card-header">
                             <h5>Pendaftaran Anggota Terbaru</h5>
-                            <table class="table table-bordernone">
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
                                         <th>Nama</th>
-                                        <th>NIK</th>
+                                        <th>NIK KTP</th>
+                                        <th>Jenis Kelamin</th>
                                         <th>Departemen</th>
                                         <th>Tanggal Daftar</th>
                                         <th>Status</th>
@@ -193,50 +197,44 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @forelse ($recentMembers as $member)
+                                    @foreach ($recentMembers as $member)
                                         <tr>
+                                            <td>{{ $member->name }}</td>
+                                            <td>{{ $member->nik_ktp }}</td>
                                             <td>
-                                                <div class="media">
-                                                    {{-- Placeholder jika tidak ada foto, atau pakai inisial --}}
-                                                    <div class="media-body">
-                                                        <a href="{{ route('members.show', $member->id) }}">
-                                                            <span class="fw-bold">{{ $member->name }}</span>
-                                                        </a>
-                                                    </div>
-                                                </div>
+                                                @if ($member->gender == 'male')
+                                                    <span class="badge badge-male">Laki-laki</span>
+                                                @elseif($member->gender == 'female')
+                                                    <span class="badge badge-female">Perempuan</span>
+                                                @else
+                                                    -
+                                                @endif
                                             </td>
+                                            <td>{{ $member->department }}</td>
+                                            <td>{{ $member->created_at->translatedFormat('d F Y') }}</td>
                                             <td>
-                                                <p>{{ $member->nik }}</p>
-                                            </td>
-                                            <td>
-                                                <p>{{ $member->department }}</p>
-                                            </td>
-                                            <td>
-                                                <p>{{ $member->created_at->format('d M Y') }}</p>
-                                            </td>
-                                            <td>
-                                                <span
-                                                    class="badge {{ $member->status == 'approved' ? 'bg-success' : 'bg-warning' }}">
-                                                    {{ ucfirst($member->status) }}
-                                                </span>
+                                                @if ($member->status == 'pending')
+                                                    <span class="badge badge-pending">Menunggu Persetujuan</span>
+                                                @elseif($member->status == 'approved')
+                                                    <span class="badge badge-approved">Sudah Disetujui</span>
+                                                @elseif($member->status == 'rejected')
+                                                    <span class="badge badge-rejected">Ditolak</span>
+                                                @else
+                                                    <span class="badge bg-secondary">{{ ucfirst($member->status) }}</span>
+                                                @endif
                                             </td>
                                             <td>
                                                 <a href="{{ route('members.show', $member->id) }}"
-                                                    class="btn btn-xs btn-primary-light">Detail</a>
+                                                    class="btn btn-primary btn-xs">Detail</a>
                                             </td>
                                         </tr>
-                                    @empty
-                                        <tr>
-                                            <td colspan="6" class="text-center">Belum ada pendaftaran member terbaru.
-                                            </td>
-                                        </tr>
-                                    @endforelse
+                                    @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                 </div>
-            </div>
+            @endif
         </div>
     </div>
 @endsection

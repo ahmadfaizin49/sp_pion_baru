@@ -5,6 +5,39 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+    <style>
+        .detail-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6c757d;
+            margin-bottom: 2px;
+            font-weight: 600;
+        }
+
+        .detail-value {
+            font-size: 15px;
+            color: #212529;
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+
+        .section-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #AA2224;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title i {
+            margin-right: 8px;
+        }
+    </style>
 @endpush
 
 @section('content')
@@ -22,157 +55,131 @@
                 </div>
             </div>
 
-            <!-- Card Detail -->
+            <!-- Content -->
             <div class="col-md-12">
-                <div class="card">
-                    <div class="card-body">
-                        <!-- Header -->
+                <div class="card border-0 shadow-sm">
+                    <div class="card-body p-4">
                         <div class="row">
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Status</label>
-                                    <div class="form-control-plaintext py-0">
-                                        @if ($member->status == 'pending')
-                                            <span class="badge bg-warning text-dark">Menunggu Persetujuan</span>
-                                        @else
-                                            <span class="badge bg-success text-dark">Sudah Disetujui</span>
-                                        @endif
+                            <!-- Left Column: Status & System Info -->
+                            <div class="col-md-4 border-end">
+                                <div class="section-title">
+                                    Status & Sistem
+                                </div>
+
+                                <div class="mb-4">
+                                    <p class="detail-label">Status Pendaftaran</p>
+                                    @if ($member->status == 'pending')
+                                        <span class="badge badge-pending">Menunggu Persetujuan</span>
+                                    @elseif($member->status == 'approved')
+                                        <span class="badge badge-approved">Sudah Disetujui</span>
+                                    @elseif($member->status == 'rejected')
+                                        <span class="badge badge-rejected">Ditolak</span>
+                                    @else
+                                        <span class="badge bg-secondary">{{ ucfirst($member->status) }}</span>
+                                    @endif
+                                </div>
+
+                                <div class="mb-4">
+                                    <p class="detail-label">Pendaftar</p>
+                                    <div class="d-flex align-items-center">
+                                        <p class="detail-value text-primary fw-bold mb-0">{{ $member->referrer->name }}</p>
                                     </div>
                                 </div>
+
+                                <div class="mb-4">
+                                    <p class="detail-label">Tanggal Registrasi</p>
+                                    <p class="detail-value text-dark fw-bold">
+                                        {{ $member->created_at->format('d M Y, H:i') }}
+                                    </p>
+                                </div>
                             </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Pendaftar</label>
-                                    <div class="form-control-plaintext py-0">
-                                        <span class="badge bg-primary"> {{ $member->referrer->name }}</span>
+
+                            <!-- Right Column: Personal Data -->
+                            <div class="col-md-8 ps-md-4">
+                                <div class="section-title">
+                                    Informasi Pribadi
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">Nama Lengkap</p>
+                                        <p class="detail-value text-dark fw-bold">{{ $member->name }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">NIK Karyawan</p>
+                                        <p class="detail-value">{{ $member->nik_karyawan }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">NIK KTP</p>
+                                        <p class="detail-value">{{ $member->nik_ktp }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">No Telepon / WA</p>
+                                        <p class="detail-value">{{ $member->phone ?? '-' }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">Departemen</p>
+                                        <p class="detail-value">{{ $member->department }}</p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">Tempat, Tanggal Lahir</p>
+                                        <p class="detail-value">
+                                            {{ $member->birth_place }},
+                                            {{ $member->birth_date ? \Carbon\Carbon::parse($member->birth_date)->translatedFormat('j F Y') : '-' }}
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">Jenis Kelamin</p>
+                                        <p class="detail-value">
+                                            @if ($member->gender == 'male')
+                                                <span class="badge badge-male">Laki-laki</span>
+                                            @elseif($member->gender == 'female')
+                                                <span class="badge badge-female">Perempuan</span>
+                                            @else
+                                                -
+                                            @endif
+                                        </p>
+                                    </div>
+                                    <div class="col-md-6 mb-4">
+                                        <p class="detail-label">Agama | Pendidikan</p>
+                                        <p class="detail-value">{{ $member->religion }} | {{ $member->education }}</p>
+                                    </div>
+                                    <div class="col-md-12 mb-4">
+                                        <p class="detail-label">Alamat Lengkap</p>
+                                        <p class="detail-value">{{ $member->address }}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- Baris 1 -->
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Nama</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->name }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>NIK</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->nik }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <hr class="my-4">
 
-                        <!-- Baris 2 -->
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Departemen</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->department }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>No. Telepon / WA</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->phone ?? '-' }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        <div class="d-flex justify-content-end gap-2 mt-2">
+                            <a href="{{ route('members.pdf', $member->id) }}" class="btn btn-primary px-4"
+                                target="_blank">
+                                <i class="fa fa-file-text me-2"></i> Lihat PDF
+                            </a>
 
-                        <!-- Baris 3 -->
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Tempat Lahir</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->birth_place }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Tanggal Lahir</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->birth_date ? \Carbon\Carbon::parse($member->birth_date)->translatedFormat('j F Y') : '-' }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Baris 4 -->
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Jenis Kelamin</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->gender == 'male' ? 'Laki-laki' : ($member->gender == 'female' ? 'Perempuan' : '-') }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Agama</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->religion }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Baris 4 -->
-                        <div class="row">
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Pendidikan</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->education }}
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-sm-6">
-                                <div class="mb-3">
-                                    <label>Alamat</label>
-                                    <div class="form-control-plaintext py-0">
-                                        {{ $member->address }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="card-footer">
-                            <div class="d-flex justify-content-end gap-2">
-                                <a href="{{ route('members.pdf', $member->id) }}"
-                                    class="btn btn-outline-danger" target="_blank">
-                                    <i class="fa fa-file-pdf me-1"></i> Preview PDF
-                                </a>
-
-                                @if ($member->status == 'pending')
-                                    <form action="{{ route('members.approve', $member->id) }}" method="POST"
-                                        id="approveForm">
-                                        @csrf
-                                        <button type="button" class="btn btn-success" onclick="confirmApprove()">
-                                            <i class="fa fa-check-circle me-1"></i> Setujui & Buat Akun
-                                        </button>
-                                    </form>
-                                @else
-                                    <button class="btn btn-success" disabled>
-                                        <i class="fa fa-check-double me-1"></i> Sudah Aktif
+                            @if ($member->status == 'pending')
+                                <form action="{{ route('members.reject', $member->id) }}" method="POST" id="rejectForm">
+                                    @csrf
+                                    <button type="button" class="btn btn-danger px-4" onclick="confirmReject()">
+                                        <i class="fa fa-times me-2"></i> Tolak
                                     </button>
-                                @endif
-                            </div>
-                        </div>
+                                </form>
 
+                                <form action="{{ route('members.approve', $member->id) }}" method="POST" id="approveForm">
+                                    @csrf
+                                    <button type="button" class="btn btn-success px-4" onclick="confirmApprove()">
+                                        <i class="fa fa-check me-2"></i> Setujui
+                                    </button>
+                                </form>
+                            @else
+                                <button class="btn btn-info px-4" disabled>
+                                    <i class="fa fa-info-circle me-2"></i> Status : {{ ucfirst($member->status) }}
+                                </button>
+                            @endif
+                        </div>
                     </div>
                 </div>
             </div>
@@ -185,16 +192,35 @@
             function confirmApprove() {
                 Swal.fire({
                     title: 'Konfirmasi Persetujuan',
-                    text: "Member akan dibuatkan akun otomatis dengan password: password1234",
-                    icon: 'question',
+                    html: "Member akan dibuatkan akun otomatis dengan <br> Password: <strong class='text-danger'>password123</strong> dan PIN: <strong class='text-danger'>123456</strong>",
+                    icon: 'success',
                     showCancelButton: true,
                     confirmButtonColor: '#28a745',
                     cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Ya, Approve!',
-                    cancelButtonText: 'Batal'
+                    confirmButtonText: 'Ya, Setuju!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
                 }).then((result) => {
                     if (result.isConfirmed) {
                         document.getElementById('approveForm').submit();
+                    }
+                })
+            }
+
+            function confirmReject() {
+                Swal.fire({
+                    title: 'Konfirmasi Penolakan',
+                    text: 'Apakah Anda yakin ingin menolak pendaftaran member ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Ya, Tolak!',
+                    cancelButtonText: 'Batal',
+                    reverseButtons: true
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('rejectForm').submit();
                     }
                 })
             }

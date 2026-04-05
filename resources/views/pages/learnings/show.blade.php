@@ -5,6 +5,7 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 @endpush
 
 @section('content')

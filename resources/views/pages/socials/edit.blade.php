@@ -5,6 +5,7 @@
 @endsection
 
 @push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
 @endpush
 
 @section('content')
@@ -32,7 +33,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -41,7 +42,7 @@
 
                         {{-- Alert Error --}}
                         @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-danger alert-dismissible fade show" role="alert">
                                 <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -50,7 +51,7 @@
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
                             </div>
-                        @endif
+@endif
 
                         {{-- Form untuk edit learning --}}
                         <form method="POST" action="{{ route('socials.update', $social->id) }}"
@@ -59,86 +60,64 @@
                             @method('PUT')
 
                             <!-- Input Title -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Judul</label>
-                                        <input class="form-control" type="text" name="title"
-                                            value="{{ old('title', $social->title) }}" required />
-                                    </div>
-                                </div>
+                            <div class="mb-3">
+                                <label>Judul</label>
+                                <input class="form-control" type="text" name="title"
+                                    value="{{ old('title', $social->title) }}" required />
                             </div>
 
                             <!-- Input Description -->
-                            <div class="row">
-                                <div class="col">
+                            <div class="mb-3">
+                                <label>Deskripsi</label>
+                                <textarea class="form-control" name="description" rows="3">{{ old('description', $social->description) }}</textarea>
+                            </div>
+
+                            <!-- Section Foto -->
+                            <div class="mb-3 p-3 border rounded">
+                                @if ($social->image_path)
                                     <div class="mb-3">
-                                        <label>Deskripsi</label>
-                                        <textarea class="form-control" name="description" rows="3">{{ old('description', $social->description) }}</textarea>
+                                        <label class="fw-bold">Foto Sekarang</label>
+                                        <p class="mb-0">
+                                            <a href="{{ asset('storage/' . $social->image_path) }}" target="_blank">
+                                                <img src="{{ asset('storage/' . $social->image_path) }}"
+                                                    alt="Current Image" style="max-width: 200px; height: auto;"
+                                                    class="img-thumbnail">
+                                            </a>
+                                        </p>
                                     </div>
+                                @endif
+                                <div>
+                                    <label>Pilih Foto Baru (opsional)</label>
+                                    <input class="form-control" type="file" name="image"
+                                        accept=".jpg,.jpeg,.png">
                                 </div>
                             </div>
 
-                            <!-- Current Image -->
-                            <div class="row">
-                                <div class="col">
-                                    @if ($social->image_path)
-                                        <div class="mb-3">
-                                            <label>Foto Sekarang</label>
-                                            <p>
-                                                <img src="{{ asset('storage/' . $social->image_path) }}" alt="Current Image"
-                                                    style="max-width: 200px; height: auto;">
-                                            </p>
+                            <!-- Section File -->
+                            <div class="mb-3 p-3 border rounded">
+                                @if ($social->file_path)
+                                    <div class="mb-3">
+                                        <label class="fw-bold d-block mb-2">File Sekarang</label>
+                                        <div class="p-2 border rounded d-inline-block text-center" style="min-width: 200px;">
+                                            <a href="{{ asset('storage/' . $social->file_path) }}" target="_blank" class="text-decoration-none text-dark">
+                                                <i class="fa fa-file-pdf-o fa-3x text-danger"></i>
+                                                <div class="text-muted small mt-1">Klik untuk lihat</div>
+                                            </a>
                                         </div>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <!-- Choose New Image -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Pilih Foto Baru (opsional)</label>
-                                        <input class="form-control" type="file" name="image" accept=".jpg,.jpeg,.png">
                                     </div>
-                                </div>
-                            </div>
-
-                            <!-- Current File -->
-                            <div class="row">
-                                <div class="col">
-                                    @if ($social->file_path)
-                                        <div class="mb-3">
-                                            <label>File Sekarang</label>
-                                            <p>
-                                                <a href="{{ asset('storage/' . $social->file_path) }}" target="_blank">
-                                                    Download
-                                                </a>
-                                            </p>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <!-- Choose New File -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="mb-3">
-                                        <label>Pilih File Baru (opsional)</label>
-                                        <input class="form-control" type="file" name="file" accept=".pdf,.doc,.docx">
-                                    </div>
+                                @endif
+                                <div>
+                                    <label>Pilih File Baru (opsional)</label>
+                                    <input class="form-control" type="file" name="file"
+                                        accept=".pdf,.doc,.docx">
                                 </div>
                             </div>
 
                             <!-- Button Update -->
-                            <div class="row">
-                                <div class="col">
-                                    <div class="text-end">
-                                        <button class="btn btn-success" type="submit">
-                                            <i class="fa fa-save me-1"></i> Update
-                                        </button>
-                                    </div>
-                                </div>
+                            <div class="text-end">
+                                <button class="btn btn-success" type="submit">
+                                    <i class="fa fa-save me-1"></i> Update
+                                </button>
                             </div>
                         </form>
                         {{-- End Form --}}

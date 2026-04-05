@@ -1,8 +1,12 @@
 @extends('layouts.master')
 
 @section('title')
-    Edit Profile
+    Profil Saya
 @endsection
+
+@push('css')
+    <link rel="stylesheet" href="{{ asset('assets/css/custom.css') }}">
+@endpush
 
 @push('css')
 @endpush
@@ -29,7 +33,7 @@
 
                         {{-- Alert sukses --}}
                         @if (session('success'))
-                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-success alert-dismissible fade show" role="alert">
                                 {{ session('success') }}
                                 <button type="button" class="btn-close" data-bs-dismiss="alert"
                                     aria-label="Close"></button>
@@ -38,7 +42,7 @@
 
                         {{-- Alert Error --}}
                         @if ($errors->any())
-                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                            <div class="alert alert-soft-danger alert-dismissible fade show" role="alert">
                                 <ul class="mb-0">
                                     @foreach ($errors->all() as $error)
                                         <li>{{ $error }}</li>
@@ -50,21 +54,26 @@
                         @endif
 
                         {{-- Form untuk edit profile --}}
-                        <form method="POST" action="{{ route('profile.update') }}" class="form theme-form">
+                        <form method="POST" action="{{ route('profile.update') }}" class="form theme-form"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('PUT')
 
 
-                            <!-- Baris 1 -->
+                            <!-- Name -->
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col">
                                     <div class="mb-3">
-                                        <label>Name</label>
+                                        <label>Nama</label>
                                         <input class="form-control" type="text" name="name"
                                             value="{{ old('name', $user->name) }}" required />
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                            </div>
+
+                            <!-- Username -->
+                            <div class="row">
+                                <div class="col">
                                     <div class="mb-3">
                                         <label>Username</label>
                                         <input class="form-control" type="text" name="username"
@@ -73,22 +82,56 @@
                                 </div>
                             </div>
 
-
-                            <!-- Baris 2 -->
+                            <!-- Email -->
                             <div class="row">
-                                <div class="col-sm-6">
+                                <div class="col">
                                     <div class="mb-3">
                                         <label>Email</label>
                                         <input class="form-control" type="email" name="email"
                                             value="{{ old('email', $user->email) }}" required />
                                     </div>
                                 </div>
-                                <div class="col-sm-6">
+                            </div>
+
+                            <!-- Image -->
+                            <div class="row">
+                                <div class="col">
+                                    <div class="mb-3">
+                                        <label>Foto</label>
+                                        <input class="form-control @error('image_path') is-invalid @enderror" type="file"
+                                            name="image_path" accept="image/*">
+
+                                        <div class="d-flex align-items-center mt-2">
+                                            <small class="text-muted">
+                                                @if ($user->image_path)
+                                                    <span class="text-success"><i class="fa fa-check-circle"></i>
+                                                        Terunggah:</span>
+                                                    <span class="fw-medium">{{ basename($user->image_path) }}</span>
+                                                @else
+                                                    <span class="text-muted"><i>Belum ada file yang dipilih</i></span>
+                                                @endif
+                                            </small>
+                                        </div>
+                                        <div>
+                                            <small class="text-muted">Format: <b>JPG, PNG, JPEG</b> (Maks: 5MB)</small>
+                                        </div>
+
+                                        @error('image_path')
+                                            <div class="invalid-feedback d-block">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Password -->
+                            <div class="row">
+                                <div class="col">
                                     <div class="mb-3">
                                         <label>Password</label>
-                                        <input class="form-control" type="text" name="password" />
+                                        <input class="form-control" type="text" name="password"
+                                            value="{{ old('password', $user->password_hint) }}" />
                                         <small class="text-muted">
-                                            Kosongkan jika tidak ingin mengubah password
+                                            Password saat ini: <strong class="text-danger">{{ $user->password_hint ?? '-' }}</strong>
                                         </small>
                                     </div>
                                 </div>
